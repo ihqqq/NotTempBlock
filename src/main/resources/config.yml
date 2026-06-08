@@ -31,7 +31,7 @@ blocks:
   OBSIDIAN: 40
   TNT: 5
 
-# --- Cài đặt Entity ---
+# Cài đặt Entity
 # Thời gian xóa từng loại entity (tính bằng giây).
 # Các loại entity được hỗ trợ: ARMOR_STAND, BOAT, MINECART, END_CRYSTAL, v.v.
 # Xem thêm: https://jd.papermc.io/paper/1.21/org/bukkit/entity/EntityType.html

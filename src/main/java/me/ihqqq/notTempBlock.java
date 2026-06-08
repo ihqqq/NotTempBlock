@@ -18,12 +18,26 @@ public final class notTempBlock extends JavaPlugin {
     private WorldGuardHook worldGuardHook;
 
     @Override
+    public void onLoad() {
+        if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+            try {
+                worldGuardHook = new WorldGuardHook();
+                worldGuardHook.registerFlags();
+                getLogger().info("WorldGuard flags registered successfully.");
+            } catch (Exception e) {
+                getLogger().log(Level.SEVERE, "Failed to register WorldGuard flags in onLoad().", e);
+                worldGuardHook = null;
+            }
+        }
+    }
+
+    @Override
     public void onEnable() {
         reloadPluginConfig();
 
         this.removalManager = new RemovalManager(this);
 
-        loadWorldGuardHook();
+        validateWorldGuardHook();
         registerListeners();
         registerCommands();
 
@@ -38,7 +52,6 @@ public final class notTempBlock extends JavaPlugin {
         getLogger().info("notTempBlock disabled – all pending tasks cancelled.");
     }
 
-
     public void reloadPluginConfig() {
         saveDefaultConfig();
         reloadConfig();
@@ -47,20 +60,22 @@ public final class notTempBlock extends JavaPlugin {
     }
 
 
-    private void loadWorldGuardHook() {
-        if (!pluginConfig.isWorldGuardHookEnabled()) return;
-
-        if (getServer().getPluginManager().getPlugin("WorldGuard") == null) {
-            getLogger().warning("WorldGuard hook is enabled in config but WorldGuard is not installed. Disabling hook.");
+    private void validateWorldGuardHook() {
+        if (!pluginConfig.isWorldGuardHookEnabled()) {
+            worldGuardHook = null;
             return;
         }
 
-        try {
-            worldGuardHook = new WorldGuardHook();
-            worldGuardHook.registerFlags();
+        if (getServer().getPluginManager().getPlugin("WorldGuard") == null) {
+            getLogger().warning("WorldGuard hook is enabled in config but WorldGuard is not installed. Disabling hook.");
+            worldGuardHook = null;
+            return;
+        }
+
+        if (worldGuardHook != null) {
             getLogger().info("WorldGuard hook enabled.");
-        } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "Failed to initialise WorldGuard hook.", e);
+        } else {
+            getLogger().warning("WorldGuard hook could not be initialised (check onLoad errors).");
         }
     }
 
@@ -77,7 +92,6 @@ public final class notTempBlock extends JavaPlugin {
             cmd.setTabCompleter(handler);
         }
     }
-
 
     public PluginConfig getPluginConfig() {
         return pluginConfig;
