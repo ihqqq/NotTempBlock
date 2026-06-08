@@ -8,7 +8,10 @@ import me.ihqqq.listener.EntityPlaceListener;
 import me.ihqqq.manager.RemovalManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 
 public final class notTempBlock extends JavaPlugin {
@@ -17,8 +20,13 @@ public final class notTempBlock extends JavaPlugin {
     private RemovalManager removalManager;
     private WorldGuardHook worldGuardHook;
 
+    private final Set<String> forceAllowedBlocks = Collections.synchronizedSet(new HashSet<>());
+
+    private final Set<String> forceAllowedEntities = Collections.synchronizedSet(new HashSet<>());
+
     @Override
     public void onLoad() {
+        // Flag phải được đăng ký trong onLoad() trước khi WorldGuard lock FlagRegistry
         if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
             try {
                 worldGuardHook = new WorldGuardHook();
@@ -58,7 +66,6 @@ public final class notTempBlock extends JavaPlugin {
         this.pluginConfig = new PluginConfig(getConfig());
         getLogger().info("Configuration loaded successfully.");
     }
-
 
     private void validateWorldGuardHook() {
         if (!pluginConfig.isWorldGuardHookEnabled()) {
@@ -103,5 +110,13 @@ public final class notTempBlock extends JavaPlugin {
 
     public Optional<WorldGuardHook> getWorldGuardHook() {
         return Optional.ofNullable(worldGuardHook);
+    }
+
+    public Set<String> getForceAllowedBlocks() {
+        return forceAllowedBlocks;
+    }
+
+    public Set<String> getForceAllowedEntities() {
+        return forceAllowedEntities;
     }
 }

@@ -14,10 +14,12 @@
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <description>Automatically removes placed blocks and entities after a configurable time.</description>
+        <description>Tự động xóa các khối và thực thể đã đặt sau một khoảng thời gian có thể cấu hình.</description>
+        <jar.finalName>NotTempBlock-${project.version}</jar.finalName>
     </properties>
 
     <build>
+        <finalName>${jar.finalName}</finalName>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>

@@ -12,8 +12,20 @@ enabled-worlds:
 bypass-permission: true
 
 # Nếu đặt true, yêu cầu WorldGuard phải được cài đặt.
-# Các vùng có flag 'block-temp: deny' hoặc 'entity-temp: deny'
-# sẽ không bị áp dụng tính năng tự động xóa.
+# Plugin sẽ đăng ký 3 flag WorldGuard:
+#
+#   block-temp (default: allow)
+#     → Region set DENY sẽ không áp dụng tự động xóa block.
+#
+#   entity-temp (default: allow)
+#     → Region set DENY sẽ không áp dụng tự động xóa entity.
+#
+#   allow-configured-blocks (default: deny)
+#     → Region set ALLOW sẽ cho phép đặt các block/entity có trong config.yml
+#       ngay cả khi các flag khác (vd: build: deny) đang chặn việc đặt block.
+#       Flag này override WorldGuard và các plugin khác.
+#       Ví dụ dùng: /rg flag <region> allow-configured-blocks allow
+#
 worldguard-hook: true
 
 # Cài đặt Block

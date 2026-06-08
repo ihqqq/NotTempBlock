@@ -16,15 +16,19 @@ public final class WorldGuardHook {
     private final StateFlag tempBlockFlag;
     private final StateFlag tempEntityFlag;
 
+    private final StateFlag allowConfiguredBlocksFlag;
+
     public WorldGuardHook() {
-        this.tempBlockFlag = new StateFlag("block-temp",  true);
-        this.tempEntityFlag = new StateFlag("entity-temp",  true);
+        this.tempBlockFlag      = new StateFlag("block-temp",              true);
+        this.tempEntityFlag     = new StateFlag("entity-temp",             true);
+        this.allowConfiguredBlocksFlag = new StateFlag("allow-configured-blocks", false);
     }
 
     public void registerFlags() {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
-        registerFlag(registry, "block-temp", tempBlockFlag);
-        registerFlag(registry, "entity-temp", tempEntityFlag);
+        registerFlag(registry, "block-temp",               tempBlockFlag);
+        registerFlag(registry, "entity-temp",              tempEntityFlag);
+        registerFlag(registry, "allow-configured-blocks",  allowConfiguredBlocksFlag);
     }
 
     public boolean canEraseBlock(Location location) {
@@ -34,6 +38,23 @@ public final class WorldGuardHook {
     public boolean canEraseEntity(Location location) {
         return testFlag(location, tempEntityFlag);
     }
+
+    public boolean isAllowConfiguredBlocks(Location location) {
+        if (location.getWorld() == null) return false;
+        try {
+            var query = WorldGuard.getInstance()
+                    .getPlatform()
+                    .getRegionContainer()
+                    .createQuery();
+            var result = query.getApplicableRegions(BukkitAdapter.adapt(location))
+                    .testState(null, allowConfiguredBlocksFlag);
+            return result;
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "Lỗi khi kiểm tra flag allow-configured-blocks; mặc định false.", e);
+            return false;
+        }
+    }
+
 
     private void registerFlag(FlagRegistry registry, String name, StateFlag flag) {
         try {
@@ -50,9 +71,8 @@ public final class WorldGuardHook {
                     .getPlatform()
                     .getRegionContainer()
                     .createQuery();
-            var result = query.getApplicableRegions(BukkitAdapter.adapt(location))
+            return query.getApplicableRegions(BukkitAdapter.adapt(location))
                     .testState(null, flag);
-            return result;
         } catch (Exception e) {
             LOG.log(Level.WARNING, "Lỗi khi kiểm tra flag WorldGuard; mặc định cho phép.", e);
             return true;
