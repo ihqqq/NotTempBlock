@@ -9,7 +9,7 @@ enabled-worlds:
 
 # Nếu đặt true, người chơi có quyền 'nottempblock.bypass'
 # có thể đặt block/entity mà không bị tự động xóa.
-bypass-permission: false
+bypass-permission: true
 
 # Nếu đặt true, yêu cầu WorldGuard phải được cài đặt.
 # Các vùng có flag 'block-temp: deny' hoặc 'entity-temp: deny'
