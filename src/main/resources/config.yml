@@ -1,0 +1,43 @@
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃     notTempBlock Config      ┃
+# ┃      Developed by ihqqq      ┃
+# ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+# ┃
+# ┗╸ Issues: https://github.com/xF3d3/notTempBlock
+
+# Worlds where block/entity auto-removal is active.
+enabled-worlds:
+  - world
+  - world_nether
+
+# If true, players with 'nottempblock.bypass' permission
+# can place blocks/entities without auto-removal.
+bypass-permission: true
+
+# If true, requires WorldGuard to be installed.
+# Regions with 'block-erase: deny' or 'entity-erase: deny'
+# will be excluded from auto-removal.
+worldguard-hook: false
+
+# --- Block Settings ---
+# If all-blocks.enabled is true, EVERY placed block is temporary
+# and individual block entries below are ignored.
+all-blocks:
+  enabled: false
+  time-seconds: 20
+
+# Per-block removal times (in seconds).
+# Use the Material enum name for your server version.
+# See: https://jd.papermc.io/paper/1.21/org/bukkit/Material.html
+blocks:
+  COBWEB: 30
+  OBSIDIAN: 40
+  TNT: 5
+
+# --- Entity Settings ---
+# Per-entity removal times (in seconds).
+# Supported entity types: ARMOR_STAND, BOAT, MINECART, END_CRYSTAL, etc.
+# See: https://jd.papermc.io/paper/1.21/org/bukkit/entity/EntityType.html
+entities:
+  END_CRYSTAL: 10
+  ARMOR_STAND: 60

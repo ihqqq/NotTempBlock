@@ -1,0 +1,26 @@
+name: notTempBlock
+version: '${project.version}'
+main: me.ihqqq.notTempBlock
+api-version: '1.21'
+author: ihqqq
+
+softdepend:
+  - WorldGuard
+
+commands:
+  nottempblock:
+    description: Main command for notTempBlock
+    usage: /nottempblock <about|reload>
+    aliases:
+      - ntb
+
+permissions:
+  nottempblock.about:
+    description: View plugin information
+    default: true
+  nottempblock.reload:
+    description: Reload the plugin configuration
+    default: op
+  nottempblock.bypass:
+    description: Bypass block/entity auto-removal
+    default: op
