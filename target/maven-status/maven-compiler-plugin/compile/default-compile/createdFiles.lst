@@ -1,0 +1,7 @@
+me\ihqqq\command\NotTempBlockCommand.class
+me\ihqqq\hook\WorldGuardHook.class
+me\ihqqq\listener\BlockPlaceListener.class
+me\ihqqq\listener\EntityPlaceListener.class
+me\ihqqq\manager\RemovalManager.class
+me\ihqqq\config\PluginConfig.class
+me\ihqqq\notTempBlock.class

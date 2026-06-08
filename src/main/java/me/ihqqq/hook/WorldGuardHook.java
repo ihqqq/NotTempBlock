@@ -13,26 +13,26 @@ import java.util.logging.Logger;
 public final class WorldGuardHook {
     private static final Logger LOG = Logger.getLogger("notTempBlock");
 
-    private final StateFlag blockEraseFlag;
-    private final StateFlag entityEraseFlag;
+    private final StateFlag tempBlockFlag;
+    private final StateFlag tempEntityFlag;
 
     public WorldGuardHook() {
-        this.blockEraseFlag = new StateFlag("block-erase",  true);
-        this.entityEraseFlag = new StateFlag("entity-erase",  true);
+        this.tempBlockFlag = new StateFlag("block-temp",  true);
+        this.tempEntityFlag = new StateFlag("entity-temp",  true);
     }
 
     public void registerFlags() {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
-        registerFlag(registry, "block-erase", blockEraseFlag);
-        registerFlag(registry, "entity-erase", entityEraseFlag);
+        registerFlag(registry, "block-temp", tempBlockFlag);
+        registerFlag(registry, "entity-temp", tempEntityFlag);
     }
 
     public boolean canEraseBlock(Location location) {
-        return testFlag(location, blockEraseFlag);
+        return testFlag(location, tempBlockFlag);
     }
 
     public boolean canEraseEntity(Location location) {
-        return testFlag(location, entityEraseFlag);
+        return testFlag(location, tempEntityFlag);
     }
 
     private void registerFlag(FlagRegistry registry, String name, StateFlag flag) {

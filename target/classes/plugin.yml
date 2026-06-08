@@ -1,5 +1,5 @@
 name: NotTempBlock
-version: '${project.version}'
+version: '1.0'
 main: me.ihqqq.notTempBlock
 api-version: '1.21'
 author: ihqqq
