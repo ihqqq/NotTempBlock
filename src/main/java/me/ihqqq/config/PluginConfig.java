@@ -38,12 +38,12 @@ public final class PluginConfig {
         for (String key : section.getKeys(false)) {
             Material material = Material.matchMaterial(key);
             if (material == null) {
-                logWarning("Unknown material in config blocks section: '" + key + "' – skipping.");
+                logWarning("Loại block không hợp lệ trong cấu hình mục 'blocks': '" + key + "' – bỏ qua.");
                 continue;
             }
             int time = section.getInt(key, -1);
             if (time <= 0) {
-                logWarning("Invalid time for block '" + key + "' (must be > 0) – skipping.");
+                logWarning("Thời gian không hợp lệ cho block '" + key + "' (phải > 0) – bỏ qua.");
                 continue;
             }
             map.put(material, time);
@@ -61,12 +61,12 @@ public final class PluginConfig {
             try {
                 type = EntityType.valueOf(key.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {
-                logWarning("Unknown entity type in config entities section: '" + key + "' – skipping.");
+                logWarning("Loại entity không hợp lệ trong cấu hình mục 'entities': '" + key + "' – bỏ qua.");
                 continue;
             }
             int time = section.getInt(key, -1);
             if (time <= 0) {
-                logWarning("Invalid time for entity '" + key + "' (must be > 0) – skipping.");
+                logWarning("Thời gian không hợp lệ cho entity '" + key + "' (phải > 0) – bỏ qua.");
                 continue;
             }
             map.put(type, time);
@@ -75,7 +75,7 @@ public final class PluginConfig {
     }
 
     private static void logWarning(String msg) {
-        Logger.getLogger("notTempBlock").warning("[Config] " + msg);
+        Logger.getLogger("notTempBlock").warning("[Cấu hình] " + msg);
     }
 
     public boolean isWorldEnabled(String worldName) {

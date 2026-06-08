@@ -43,7 +43,7 @@ public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage(Component.text("Usage: /" + label + " <about|reload>", NamedTextColor.RED));
+        sender.sendMessage(Component.text("Cách dùng: /" + label + " <about|reload>", NamedTextColor.RED));
         return true;
     }
 
@@ -68,11 +68,11 @@ public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
                 .append(Component.text(" v" + desc.getVersion(), NamedTextColor.YELLOW))
                 .build());
         sender.sendMessage(Component.text()
-                .append(Component.text("  Author:  ", NamedTextColor.AQUA))
+                .append(Component.text("  Tác giả:  ", NamedTextColor.AQUA))
                 .append(Component.text(String.join(", ", desc.getAuthors()), NamedTextColor.WHITE))
                 .build());
         sender.sendMessage(Component.text()
-                .append(Component.text("  Active removal tasks: ", NamedTextColor.AQUA))
+                .append(Component.text("  Tác vụ xóa đang chạy: ", NamedTextColor.AQUA))
                 .append(Component.text(
                         String.valueOf(plugin.getRemovalManager().activeTaskCount()),
                         NamedTextColor.WHITE))
@@ -87,18 +87,18 @@ public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
     }
 
     private void executeReload(CommandSender sender) {
-        sender.sendMessage(Component.text("Reloading notTempBlock configuration…", NamedTextColor.AQUA));
+        sender.sendMessage(Component.text("Đang tải lại cấu hình notTempBlock…", NamedTextColor.AQUA));
         try {
             plugin.reloadPluginConfig();
-            sender.sendMessage(Component.text("Configuration reloaded successfully.", NamedTextColor.GREEN));
+            sender.sendMessage(Component.text("Tải lại cấu hình thành công.", NamedTextColor.GREEN));
         } catch (Exception e) {
             sender.sendMessage(Component.text(
-                    "Reload failed – check the console for details.", NamedTextColor.RED));
-            plugin.getLogger().severe("Error during config reload: " + e.getMessage());
+                    "Tải lại thất bại – vui lòng kiểm tra console để biết thêm chi tiết.", NamedTextColor.RED));
+            plugin.getLogger().severe("Lỗi khi tải lại cấu hình: " + e.getMessage());
         }
     }
 
     private static Component noPermission() {
-        return Component.text("You don't have permission to do that.", NamedTextColor.RED);
+        return Component.text("Bạn không có quyền thực hiện thao tác này.", NamedTextColor.RED);
     }
 }

@@ -39,7 +39,7 @@ public final class WorldGuardHook {
         try {
             registry.register(flag);
         } catch (FlagConflictException | IllegalStateException e) {
-            LOG.fine("WorldGuard flag '" + name + "' already registered; using existing.");
+            LOG.fine("Flag WorldGuard '" + name + "' đã được đăng ký trước đó; sử dụng flag hiện có.");
         }
     }
 
@@ -54,7 +54,7 @@ public final class WorldGuardHook {
                     .testState(null, flag);
             return result;
         } catch (Exception e) {
-            LOG.log(Level.WARNING, "Error while checking WorldGuard flag; defaulting to allow.", e);
+            LOG.log(Level.WARNING, "Lỗi khi kiểm tra flag WorldGuard; mặc định cho phép.", e);
             return true;
         }
     }

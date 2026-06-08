@@ -1,43 +1,38 @@
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃     notTempBlock Config      ┃
-# ┃      Developed by ihqqq      ┃
-# ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-# ┃
-# ┗╸ Issues: https://github.com/xF3d3/notTempBlock
+# notTempBlock cho NotMC Network
 
-# Worlds where block/entity auto-removal is active.
+# Các thế giới (world) sẽ áp dụng tính năng tự động xóa block/entity.
 enabled-worlds:
   - world
   - world_nether
 
-# If true, players with 'nottempblock.bypass' permission
-# can place blocks/entities without auto-removal.
+# Nếu đặt true, người chơi có quyền 'nottempblock.bypass'
+# có thể đặt block/entity mà không bị tự động xóa.
 bypass-permission: true
 
-# If true, requires WorldGuard to be installed.
-# Regions with 'block-erase: deny' or 'entity-erase: deny'
-# will be excluded from auto-removal.
+# Nếu đặt true, yêu cầu WorldGuard phải được cài đặt.
+# Các vùng có flag 'block-erase: deny' hoặc 'entity-erase: deny'
+# sẽ không bị áp dụng tính năng tự động xóa.
 worldguard-hook: false
 
-# --- Block Settings ---
-# If all-blocks.enabled is true, EVERY placed block is temporary
-# and individual block entries below are ignored.
+# Cài đặt Block
+# Nếu all-blocks.enabled là true, MỌI block được đặt sẽ là tạm thời
+# và các mục block riêng lẻ bên dưới sẽ bị bỏ qua.
 all-blocks:
   enabled: false
   time-seconds: 20
 
-# Per-block removal times (in seconds).
-# Use the Material enum name for your server version.
-# See: https://jd.papermc.io/paper/1.21/org/bukkit/Material.html
+# Thời gian xóa từng loại block (tính bằng giây).
+# Sử dụng tên enum Material của phiên bản server bạn đang dùng.
+# Xem thêm: https://jd.papermc.io/paper/1.21/org/bukkit/Material.html
 blocks:
   COBWEB: 30
   OBSIDIAN: 40
   TNT: 5
 
-# --- Entity Settings ---
-# Per-entity removal times (in seconds).
-# Supported entity types: ARMOR_STAND, BOAT, MINECART, END_CRYSTAL, etc.
-# See: https://jd.papermc.io/paper/1.21/org/bukkit/entity/EntityType.html
+# --- Cài đặt Entity ---
+# Thời gian xóa từng loại entity (tính bằng giây).
+# Các loại entity được hỗ trợ: ARMOR_STAND, BOAT, MINECART, END_CRYSTAL, v.v.
+# Xem thêm: https://jd.papermc.io/paper/1.21/org/bukkit/entity/EntityType.html
 entities:
   END_CRYSTAL: 10
   ARMOR_STAND: 60

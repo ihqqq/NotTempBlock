@@ -9,18 +9,18 @@ softdepend:
 
 commands:
   nottempblock:
-    description: Main command for notTempBlock
+    description: Lệnh chính của notTempBlock
     usage: /nottempblock <about|reload>
     aliases:
       - ntb
 
 permissions:
   nottempblock.about:
-    description: View plugin information
+    description: Xem thông tin plugin
     default: true
   nottempblock.reload:
-    description: Reload the plugin configuration
+    description: Tải lại cấu hình plugin
     default: op
   nottempblock.bypass:
-    description: Bypass block/entity auto-removal
+    description: Bỏ qua tính năng tự động xóa block/entity
     default: op
