@@ -88,6 +88,10 @@ public class RemovalManager {
         }
     }
 
+    public boolean isBlockTracked(Location loc) {
+        return activeTasks.containsKey(blockKey(loc));
+    }
+
     private boolean isChunkLoaded(Location loc) {
         if(loc.getWorld() == null) return false;
         return loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4);

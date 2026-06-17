@@ -2,7 +2,6 @@ package me.ihqqq.listener;
 
 import me.ihqqq.config.PluginConfig;
 import me.ihqqq.notTempBlock;
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -36,17 +35,17 @@ public final class EntityPlaceListener implements Listener {
             EntityType type = entity.getType();
             if (config.getEntityDelay(type).isEmpty()) return;
 
-            Location loc = entity.getLocation().clone();
-            int seconds = config.getEntityDelay(type).getAsInt();
-
-            event.setCancelled(true);
             plugin.getForceAllowedEntities().add(entity.getUniqueId().toString());
-
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                Entity spawned = loc.getWorld().spawnEntity(loc, type);
-                plugin.getRemovalManager().scheduleEntityRemoval(spawned, seconds);
-            }, 1L);
+            event.setCancelled(true);
         });
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    public void onEntityPlaceOverride(EntityPlaceEvent event) {
+        Entity entity = event.getEntity();
+        if (!plugin.getForceAllowedEntities().contains(entity.getUniqueId().toString())) return;
+
+        event.setCancelled(false);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -59,9 +58,9 @@ public final class EntityPlaceListener implements Listener {
         if (player == null) return;
         if (config.isBypassPermissionEnabled() && player.hasPermission("nottempblock.bypass")) return;
 
-        if (plugin.getForceAllowedEntities().contains(entity.getUniqueId().toString())) return;
+        boolean isForced = plugin.getForceAllowedEntities().remove(entity.getUniqueId().toString());
 
-        if (config.isWorldGuardHookEnabled()) {
+        if (!isForced && config.isWorldGuardHookEnabled()) {
             boolean allowed = plugin.getWorldGuardHook()
                     .map(hook -> hook.canEraseEntity(entity.getLocation()))
                     .orElse(true);
@@ -69,7 +68,6 @@ public final class EntityPlaceListener implements Listener {
         }
 
         config.getEntityDelay(entity.getType())
-                .ifPresent(seconds ->
-                        plugin.getRemovalManager().scheduleEntityRemoval(entity, seconds));
+                .ifPresent(seconds -> plugin.getRemovalManager().scheduleEntityRemoval(entity, seconds));
     }
 }

@@ -3,6 +3,7 @@ package me.ihqqq;
 import me.ihqqq.command.NotTempBlockCommand;
 import me.ihqqq.config.PluginConfig;
 import me.ihqqq.hook.WorldGuardHook;
+import me.ihqqq.listener.BlockBreakListener;
 import me.ihqqq.listener.BlockPlaceListener;
 import me.ihqqq.listener.EntityPlaceListener;
 import me.ihqqq.manager.RemovalManager;
@@ -26,7 +27,6 @@ public final class notTempBlock extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        // Flag phải được đăng ký trong onLoad() trước khi WorldGuard lock FlagRegistry
         if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
             try {
                 worldGuardHook = new WorldGuardHook();
@@ -89,6 +89,7 @@ public final class notTempBlock extends JavaPlugin {
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new BlockPlaceListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityPlaceListener(this), this);
+        getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
     }
 
     private void registerCommands() {

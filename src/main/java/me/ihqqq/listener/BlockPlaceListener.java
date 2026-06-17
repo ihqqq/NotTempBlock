@@ -2,10 +2,7 @@ package me.ihqqq.listener;
 
 import me.ihqqq.config.PluginConfig;
 import me.ihqqq.notTempBlock;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -38,20 +35,16 @@ public final class BlockPlaceListener implements Listener {
             OptionalInt delay = resolveBlockDelay(config, block);
             if (delay.isEmpty()) return;
 
-            BlockData blockData = block.getBlockData();
-            Location loc = block.getLocation().clone();
-            int seconds = delay.getAsInt();
-
-            event.setCancelled(true);
             plugin.getForceAllowedBlocks().add(blockKey(block));
-
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                Block target = loc.getBlock();
-                if (target.getType() != Material.AIR) return;
-                target.setBlockData(blockData);
-                plugin.getRemovalManager().scheduleBlockRemoval(target, seconds);
-            }, 1L);
         });
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    public void onBlockPlaceOverride(BlockPlaceEvent event) {
+        Block block = event.getBlockPlaced();
+        if (!plugin.getForceAllowedBlocks().contains(blockKey(block))) return;
+
+        event.setCancelled(false);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -64,9 +57,9 @@ public final class BlockPlaceListener implements Listener {
         if (!config.isWorldEnabled(block.getWorld().getName())) return;
         if (config.isBypassPermissionEnabled() && player.hasPermission("nottempblock.bypass")) return;
 
-        if (plugin.getForceAllowedBlocks().contains(key)) return;
+        boolean isForced = plugin.getForceAllowedBlocks().remove(key);
 
-        if (config.isWorldGuardHookEnabled()) {
+        if (!isForced && config.isWorldGuardHookEnabled()) {
             boolean allowed = plugin.getWorldGuardHook()
                     .map(hook -> hook.canEraseBlock(block.getLocation()))
                     .orElse(true);
