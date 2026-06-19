@@ -1,5 +1,6 @@
 me\ihqqq\listener\BlockBreakListener.class
 me\ihqqq\command\NotTempBlockCommand.class
+me\ihqqq\listener\PlayerInteractListener.class
 me\ihqqq\hook\WorldGuardHook.class
 me\ihqqq\listener\BlockPlaceListener.class
 me\ihqqq\listener\EntityPlaceListener.class
