@@ -1,9 +1,14 @@
 me\ihqqq\listener\BlockBreakListener.class
-me\ihqqq\command\NotTempBlockCommand.class
 me\ihqqq\listener\PlayerInteractListener.class
 me\ihqqq\hook\WorldGuardHook.class
+me\ihqqq\manager\RemovalManager.class
+me\ihqqq\gui\BlockWhitelistGUI.class
+me\ihqqq\gui\WorldWhitelistGUI$1.class
+me\ihqqq\config\PluginConfig.class
+me\ihqqq\gui\WorldWhitelistGUI.class
+me\ihqqq\gui\GuiItems.class
+me\ihqqq\command\NotTempBlockCommand.class
 me\ihqqq\listener\BlockPlaceListener.class
 me\ihqqq\listener\EntityPlaceListener.class
-me\ihqqq\manager\RemovalManager.class
-me\ihqqq\config\PluginConfig.class
 me\ihqqq\notTempBlock.class
+me\ihqqq\listener\WhitelistGUIListener.class

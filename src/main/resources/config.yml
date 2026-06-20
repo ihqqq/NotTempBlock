@@ -24,18 +24,33 @@ bypass-permission: true
 #     → Region set ALLOW sẽ cho phép đặt các block/entity có trong config.yml
 #       ngay cả khi các flag khác (vd: build: deny) đang chặn việc đặt block.
 #       Flag này override WorldGuard và các plugin khác.
+#       CHỈ áp dụng cho các block được khai báo TRỰC TIẾP trong mục "blocks"
+#       bên dưới — không áp dụng cho mọi block dù all-blocks đang bật.
 #       Ví dụ dùng: /rg flag <region> allow-configured-blocks allow
 #
 worldguard-hook: true
 
+# Hiển thị số giây còn lại trước khi block bị xóa (dạng chữ nổi phía trên block).
+# Sử dụng entity TextDisplay của Minecraft, không cần plugin ngoài.
+countdown-display:
+  enabled: true
+  # %time% sẽ được thay bằng số giây còn lại. Hỗ trợ mã màu '&'.
+  format: "&e%time%s"
+  # Khoảng cách hiển thị phía trên tâm block (theo trục Y).
+  y-offset: 1.2
+
 # Cài đặt Block
 # Nếu all-blocks.enabled là true, MỌI block được đặt sẽ là tạm thời
-# và các mục block riêng lẻ bên dưới sẽ bị bỏ qua.
+# (theo thời gian all-blocks.time-seconds dưới đây) — TRỪ các block đã
+# được khai báo riêng trong mục "blocks" bên dưới. Những block đó vẫn
+# luôn dùng thời gian riêng của chúng, không bị ghi đè bởi all-blocks.
 all-blocks:
   enabled: false
   time-seconds: 20
 
 # Thời gian xóa từng loại block (tính bằng giây).
+# Các block trong danh sách này LUÔN dùng thời gian riêng ở đây,
+# kể cả khi all-blocks.enabled = true.
 # Sử dụng tên enum Material của phiên bản server bạn đang dùng.
 # Xem thêm: https://jd.papermc.io/paper/1.21/org/bukkit/Material.html
 blocks:

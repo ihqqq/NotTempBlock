@@ -1,5 +1,6 @@
 package me.ihqqq.command;
 
+import me.ihqqq.gui.BlockWhitelistGUI;
 import me.ihqqq.notTempBlock;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -8,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +17,7 @@ import java.util.List;
 
 public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
 
-    private static final List<String> SUB_COMMANDS = List.of("about", "reload");
+    private static final List<String> SUB_COMMANDS = List.of("about", "reload", "gui");
 
     private final notTempBlock plugin;
 
@@ -43,7 +45,16 @@ public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage(Component.text("Cách dùng: /" + label + " <about|reload>", NamedTextColor.RED));
+        if (args[0].equalsIgnoreCase("gui") || args[0].equalsIgnoreCase("whitelist")) {
+            if (!sender.hasPermission("nottempblock.gui")) {
+                sender.sendMessage(noPermission());
+                return true;
+            }
+            openWhitelistGui(sender);
+            return true;
+        }
+
+        sender.sendMessage(Component.text("Cách dùng: /" + label + " <about|reload|gui>", NamedTextColor.RED));
         return true;
     }
 
@@ -56,6 +67,14 @@ public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
                     .toList();
         }
         return List.of();
+    }
+
+    private void openWhitelistGui(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(Component.text("Lệnh này chỉ có thể được sử dụng trong game.", NamedTextColor.RED));
+            return;
+        }
+        new BlockWhitelistGUI(plugin, 0).open(player);
     }
 
     private void sendAbout(CommandSender sender) {

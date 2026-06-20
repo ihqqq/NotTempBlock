@@ -7,6 +7,7 @@ import me.ihqqq.listener.BlockBreakListener;
 import me.ihqqq.listener.BlockPlaceListener;
 import me.ihqqq.listener.EntityPlaceListener;
 import me.ihqqq.listener.PlayerInteractListener;
+import me.ihqqq.listener.WhitelistGUIListener;
 import me.ihqqq.manager.RemovalManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -92,6 +93,7 @@ public final class notTempBlock extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BlockPlaceListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityPlaceListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
+        getServer().getPluginManager().registerEvents(new WhitelistGUIListener(this), this);
     }
 
     private void registerCommands() {

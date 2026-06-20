@@ -32,8 +32,7 @@ public final class BlockPlaceListener implements Listener {
         plugin.getWorldGuardHook().ifPresent(hook -> {
             if (!hook.isAllowConfiguredBlocks(block.getLocation())) return;
 
-            OptionalInt delay = resolveBlockDelay(config, block);
-            if (delay.isEmpty()) return;
+            if (!config.isBlockExplicitlyConfigured(block.getType())) return;
 
             plugin.getForceAllowedBlocks().add(blockKey(block));
         });
@@ -71,10 +70,16 @@ public final class BlockPlaceListener implements Listener {
     }
 
     private static OptionalInt resolveBlockDelay(PluginConfig config, Block block) {
+        OptionalInt specific = config.getBlockDelay(block.getType());
+        if (specific.isPresent()) {
+            return specific;
+        }
+
         if (config.isAllBlocksEnabled()) {
             return OptionalInt.of(config.getAllBlocksTimeSeconds());
         }
-        return config.getBlockDelay(block.getType());
+
+        return OptionalInt.empty();
     }
 
     private static String blockKey(Block block) {

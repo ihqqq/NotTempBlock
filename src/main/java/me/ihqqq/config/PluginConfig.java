@@ -103,8 +103,19 @@ public final class PluginConfig {
         return delay != null ? OptionalInt.of(delay) : OptionalInt.empty();
     }
 
+    public boolean isBlockExplicitlyConfigured(Material material) {
+        return blockDelays.containsKey(material);
+    }
+
     public OptionalInt getEntityDelay(EntityType type) {
         Integer delay = entityDelays.get(type);
         return delay != null ? OptionalInt.of(delay) : OptionalInt.empty();
+    }
+    public Map<Material, Integer> getBlockDelays() {
+        return blockDelays;
+    }
+
+    public Map<EntityType, Integer> getEntityDelays() {
+        return entityDelays;
     }
 }

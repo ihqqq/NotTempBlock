@@ -47,9 +47,7 @@ public final class PlayerInteractListener implements Listener {
         Material material = item.getType();
         if (!material.isBlock()) return;
 
-        boolean isConfigured = config.isAllBlocksEnabled()
-                || config.getBlockDelay(material).isPresent();
-        if (!isConfigured) return;
+        if (!config.isBlockExplicitlyConfigured(material)) return;
 
         plugin.getWorldGuardHook().ifPresent(hook -> {
             if (!hook.isAllowConfiguredBlocks(target.getLocation())) return;
