@@ -15,6 +15,10 @@ public final class PluginConfig {
     private final boolean allBlocksEnabled;
     private final int allBlocksTimeSeconds;
 
+    private final boolean countdownDisplayEnabled;
+    private final String countdownDisplayFormat;
+    private final double countdownDisplayYOffset;
+
     private final Map<Material, Integer> blockDelays;
     private final Map<EntityType, Integer> entityDelays;
 
@@ -25,6 +29,10 @@ public final class PluginConfig {
 
         this.allBlocksEnabled = config.getBoolean("all-blocks.enabled", false);
         this.allBlocksTimeSeconds = config.getInt("all-blocks.time-seconds", 20);
+
+        this.countdownDisplayEnabled = config.getBoolean("countdown-display.enabled", true);
+        this.countdownDisplayFormat = config.getString("countdown-display.format", "&e%time%s");
+        this.countdownDisplayYOffset = config.getDouble("countdown-display.y-offset", 1.2);
 
         this.blockDelays = parseBlockDelays(config);
         this.entityDelays = parseEntityDelays(config);
@@ -117,5 +125,17 @@ public final class PluginConfig {
 
     public Map<EntityType, Integer> getEntityDelays() {
         return entityDelays;
+    }
+
+    public boolean isCountdownDisplayEnabled() {
+        return countdownDisplayEnabled;
+    }
+
+    public String getCountdownDisplayFormat() {
+        return countdownDisplayFormat;
+    }
+
+    public double getCountdownDisplayYOffset() {
+        return countdownDisplayYOffset;
     }
 }
