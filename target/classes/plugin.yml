@@ -10,7 +10,7 @@ softdepend:
 commands:
   nottempblock:
     description: Lệnh chính của notTempBlock
-    usage: /nottempblock <about|reload|gui>
+    usage: /nottempblock <about|reload|gui|blacklist>
     aliases:
       - ntb
 
@@ -25,5 +25,5 @@ permissions:
     description: Bỏ qua tính năng tự động xóa block/entity
     default: op
   nottempblock.gui:
-    description: Mở GUI quản lý whitelist block
+    description: Mở GUI quản lý whitelist/blacklist block
     default: op

@@ -28,6 +28,7 @@ public final class BlockWhitelistGUI implements InventoryHolder {
     public static final int SLOT_PREV = 45;
     public static final int SLOT_WORLDS = 46;
     public static final int SLOT_TOGGLE_ALL = 47;
+    public static final int SLOT_BLACKLIST = 48;
     public static final int SLOT_ADD = 49;
     public static final int SLOT_CLOSE = 51;
     public static final int SLOT_NEXT = 53;
@@ -79,7 +80,7 @@ public final class BlockWhitelistGUI implements InventoryHolder {
         }
 
         ItemStack filler = GuiItems.filler();
-        for (int slot : new int[]{48, 50, 52}) {
+        for (int slot : new int[]{50, 52}) {
             inventory.setItem(slot, filler);
         }
 
@@ -111,8 +112,24 @@ public final class BlockWhitelistGUI implements InventoryHolder {
                         "sẽ là tạm thời theo thời gian",
                         "mặc định — TRỪ các block đã",
                         "có trong danh sách dưới đây",
-                        "(chúng vẫn dùng thời gian riêng).",
+                        "(chúng vẫn dùng thời gian riêng)",
+                        "và các block trong Blacklist.",
                         "Click để chuyển đổi."
+                )));
+
+        int blacklistCount = plugin.getPluginConfig().getBlacklistBlocks().size();
+        inventory.setItem(SLOT_BLACKLIST, GuiItems.named(Material.BOOK, NamedTextColor.LIGHT_PURPLE,
+                "Quản lý Blacklist (" + blacklistCount + ")",
+                List.of(
+                        "Danh sách các block sẽ",
+                        "KHÔNG BAO GIỜ bị tự động",
+                        "xóa, kể cả khi \"Tất cả",
+                        "block\" đang BẬT.",
+                        "",
+                        "Hữu ích khi bạn muốn bật",
+                        "chế độ blacklist (xóa hết",
+                        "trừ vài block ngoại lệ).",
+                        "Click để mở."
                 )));
 
         inventory.setItem(SLOT_ADD, GuiItems.named(Material.EMERALD, NamedTextColor.GREEN,

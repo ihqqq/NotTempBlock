@@ -5,6 +5,7 @@ me\ihqqq\manager\RemovalManager.class
 me\ihqqq\gui\BlockWhitelistGUI.class
 me\ihqqq\gui\WorldWhitelistGUI$1.class
 me\ihqqq\config\PluginConfig.class
+me\ihqqq\gui\BlacklistGUI.class
 me\ihqqq\gui\WorldWhitelistGUI.class
 me\ihqqq\gui\GuiItems.class
 me\ihqqq\command\NotTempBlockCommand.class

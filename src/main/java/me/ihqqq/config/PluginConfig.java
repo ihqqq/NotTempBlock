@@ -22,6 +22,8 @@ public final class PluginConfig {
     private final Map<Material, Integer> blockDelays;
     private final Map<EntityType, Integer> entityDelays;
 
+    private final Set<Material> blacklistBlocks;
+
     public PluginConfig(FileConfiguration config) {
         this.enabledWorlds = Set.copyOf(config.getStringList("enabled-worlds"));
         this.bypassPermissionEnabled = config.getBoolean("bypass-permission", true);
@@ -36,6 +38,7 @@ public final class PluginConfig {
 
         this.blockDelays = parseBlockDelays(config);
         this.entityDelays = parseEntityDelays(config);
+        this.blacklistBlocks = parseBlacklistBlocks(config);
     }
 
     private static Map<Material, Integer> parseBlockDelays(FileConfiguration config) {
@@ -80,6 +83,22 @@ public final class PluginConfig {
             map.put(type, time);
         }
         return Collections.unmodifiableMap(map);
+    }
+
+    private static Set<Material> parseBlacklistBlocks(FileConfiguration config) {
+        List<String> rawList = config.getStringList("blacklist-blocks");
+        if (rawList.isEmpty()) return Set.of();
+
+        Set<Material> set = EnumSet.noneOf(Material.class);
+        for (String key : rawList) {
+            Material material = Material.matchMaterial(key);
+            if (material == null) {
+                logWarning("Loại block không hợp lệ trong cấu hình mục 'blacklist-blocks': '" + key + "' – bỏ qua.");
+                continue;
+            }
+            set.add(material);
+        }
+        return Collections.unmodifiableSet(set);
     }
 
     private static void logWarning(String msg) {
@@ -137,5 +156,20 @@ public final class PluginConfig {
 
     public double getCountdownDisplayYOffset() {
         return countdownDisplayYOffset;
+    }
+
+    public Set<Material> getBlacklistBlocks() {
+        return blacklistBlocks;
+    }
+
+    public boolean isBlacklisted(Material material) {
+        return blacklistBlocks.contains(material);
+    }
+
+    public boolean isBlockTemporary(Material material) {
+        if (isBlacklisted(material)) {
+            return false;
+        }
+        return isBlockExplicitlyConfigured(material) || isAllBlocksEnabled();
     }
 }

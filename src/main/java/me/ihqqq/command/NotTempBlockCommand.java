@@ -1,5 +1,6 @@
 package me.ihqqq.command;
 
+import me.ihqqq.gui.BlacklistGUI;
 import me.ihqqq.gui.BlockWhitelistGUI;
 import me.ihqqq.notTempBlock;
 import net.kyori.adventure.text.Component;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
 
-    private static final List<String> SUB_COMMANDS = List.of("about", "reload", "gui");
+    private static final List<String> SUB_COMMANDS = List.of("about", "reload", "gui", "blacklist");
 
     private final notTempBlock plugin;
 
@@ -54,7 +55,16 @@ public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage(Component.text("Cách dùng: /" + label + " <about|reload|gui>", NamedTextColor.RED));
+        if (args[0].equalsIgnoreCase("blacklist")) {
+            if (!sender.hasPermission("nottempblock.gui")) {
+                sender.sendMessage(noPermission());
+                return true;
+            }
+            openBlacklistGui(sender);
+            return true;
+        }
+
+        sender.sendMessage(Component.text("Cách dùng: /" + label + " <about|reload|gui|blacklist>", NamedTextColor.RED));
         return true;
     }
 
@@ -75,6 +85,14 @@ public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
             return;
         }
         new BlockWhitelistGUI(plugin, 0).open(player);
+    }
+
+    private void openBlacklistGui(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(Component.text("Lệnh này chỉ có thể được sử dụng trong game.", NamedTextColor.RED));
+            return;
+        }
+        new BlacklistGUI(plugin, 0).open(player);
     }
 
     private void sendAbout(CommandSender sender) {
