@@ -3,6 +3,7 @@ package me.ihqqq.command;
 import me.ihqqq.gui.BlacklistGUI;
 import me.ihqqq.gui.BlockWhitelistGUI;
 import me.ihqqq.notTempBlock;
+import me.ihqqq.util.MessageUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -64,7 +65,8 @@ public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage(Component.text("Cách dùng: /" + label + " <about|reload|gui|blacklist>", NamedTextColor.RED));
+        sender.sendMessage(MessageUtil.withPrefix(
+                Component.text("Cách dùng: /" + label + " <about|reload|gui|blacklist>", NamedTextColor.RED)));
         return true;
     }
 
@@ -81,7 +83,8 @@ public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
 
     private void openWhitelistGui(CommandSender sender) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(Component.text("Lệnh này chỉ có thể được sử dụng trong game.", NamedTextColor.RED));
+            sender.sendMessage(MessageUtil.withPrefix(
+                    Component.text("Lệnh này chỉ có thể được sử dụng trong game.", NamedTextColor.RED)));
             return;
         }
         new BlockWhitelistGUI(plugin, 0).open(player);
@@ -89,7 +92,8 @@ public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
 
     private void openBlacklistGui(CommandSender sender) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(Component.text("Lệnh này chỉ có thể được sử dụng trong game.", NamedTextColor.RED));
+            sender.sendMessage(MessageUtil.withPrefix(
+                    Component.text("Lệnh này chỉ có thể được sử dụng trong game.", NamedTextColor.RED)));
             return;
         }
         new BlacklistGUI(plugin, 0).open(player);
@@ -97,45 +101,48 @@ public class NotTempBlockCommand implements CommandExecutor, TabCompleter {
 
     private void sendAbout(CommandSender sender) {
         var desc = plugin.getDescription();
-        sender.sendMessage(Component.text()
-                .append(Component.text("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", NamedTextColor.DARK_AQUA))
-                .build());
-        sender.sendMessage(Component.text()
-                .append(Component.text("  notTempBlock", NamedTextColor.GOLD, TextDecoration.BOLD))
-                .append(Component.text(" v" + desc.getVersion(), NamedTextColor.YELLOW))
-                .build());
-        sender.sendMessage(Component.text()
-                .append(Component.text("  Tác giả:  ", NamedTextColor.AQUA))
-                .append(Component.text(String.join(", ", desc.getAuthors()), NamedTextColor.WHITE))
-                .build());
-        sender.sendMessage(Component.text()
-                .append(Component.text("  Tác vụ xóa đang chạy: ", NamedTextColor.AQUA))
-                .append(Component.text(
-                        String.valueOf(plugin.getRemovalManager().activeTaskCount()),
-                        NamedTextColor.WHITE))
-                .build());
+
+        sender.sendMessage(MessageUtil.withPrefix(
+                MessageUtil.pluginTitle()
+                        .decoration(TextDecoration.BOLD, true)
+                        .append(Component.text(" v" + desc.getVersion(), NamedTextColor.GRAY))));
+
+        sender.sendMessage(MessageUtil.withPrefix(
+                Component.text("Tác giả: ", NamedTextColor.GRAY)
+                        .append(Component.text(String.join(", ", desc.getAuthors()), NamedTextColor.WHITE))));
+
+        sender.sendMessage(MessageUtil.withPrefix(
+                Component.text("Tác vụ xóa đang chạy: ", NamedTextColor.GRAY)
+                        .append(Component.text(String.valueOf(plugin.getRemovalManager().activeTaskCount()),
+                                NamedTextColor.WHITE))));
+
         if (desc.getWebsite() != null && !desc.getWebsite().isEmpty()) {
-            sender.sendMessage(Component.text()
-                    .append(Component.text("  Website: ", NamedTextColor.AQUA))
-                    .append(Component.text(desc.getWebsite(), NamedTextColor.WHITE))
-                    .build());
+            sender.sendMessage(MessageUtil.withPrefix(
+                    Component.text("Website: ", NamedTextColor.GRAY)
+                            .append(Component.text(desc.getWebsite(), NamedTextColor.WHITE))));
         }
-        sender.sendMessage(Component.text("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", NamedTextColor.DARK_AQUA));
     }
 
     private void executeReload(CommandSender sender) {
-        sender.sendMessage(Component.text("Đang tải lại cấu hình notTempBlock…", NamedTextColor.AQUA));
+        sender.sendMessage(MessageUtil.withPrefix(
+                Component.text("Đang tải lại cấu hình...", NamedTextColor.AQUA)));
         try {
             plugin.reloadPluginConfig();
-            sender.sendMessage(Component.text("Tải lại cấu hình thành công.", NamedTextColor.GREEN));
+            sender.sendMessage(MessageUtil.withPrefix(
+                    Component.text("✔ ", NamedTextColor.GREEN)
+                            .append(Component.text("Tải lại cấu hình thành công.", NamedTextColor.GREEN))));
         } catch (Exception e) {
-            sender.sendMessage(Component.text(
-                    "Tải lại thất bại – vui lòng kiểm tra console để biết thêm chi tiết.", NamedTextColor.RED));
+            sender.sendMessage(MessageUtil.withPrefix(
+                    Component.text("⚠ ", NamedTextColor.RED)
+                            .append(Component.text("Tải lại thất bại – kiểm tra console để biết thêm chi tiết.",
+                                    NamedTextColor.RED))));
             plugin.getLogger().severe("Lỗi khi tải lại cấu hình: " + e.getMessage());
         }
     }
 
     private static Component noPermission() {
-        return Component.text("Bạn không có quyền thực hiện thao tác này.", NamedTextColor.RED);
+        return MessageUtil.withPrefix(
+                Component.text("⚠ ", NamedTextColor.RED)
+                        .append(Component.text("Bạn không có quyền thực hiện thao tác này.", NamedTextColor.RED)));
     }
 }

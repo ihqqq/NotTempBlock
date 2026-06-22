@@ -4,6 +4,7 @@ import me.ihqqq.gui.BlacklistGUI;
 import me.ihqqq.gui.BlockWhitelistGUI;
 import me.ihqqq.gui.WorldWhitelistGUI;
 import me.ihqqq.notTempBlock;
+import me.ihqqq.util.MessageUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
@@ -126,9 +127,10 @@ public final class WhitelistGUIListener implements Listener {
 
         Material material = clickedItem.getType();
         if (!material.isBlock()) {
-            player.sendMessage(Component.text(
-                    material.name() + " không phải là block, không thể thêm vào whitelist.",
-                    NamedTextColor.RED));
+            player.sendMessage(MessageUtil.withPrefix(
+                    Component.text("⚠ ", NamedTextColor.RED)
+                            .append(Component.text(material.name() + " không phải là block, không thể thêm vào whitelist.",
+                                    NamedTextColor.RED))));
             return;
         }
 
@@ -139,15 +141,18 @@ public final class WhitelistGUIListener implements Listener {
         if (event.isLeftClick()) {
             if (!isWhitelisted) {
                 setBlockDelay(material, BlockWhitelistGUI.DEFAULT_NEW_DELAY_SECONDS);
-                player.sendMessage(Component.text(
-                        "Đã thêm " + material.name() + " (" + BlockWhitelistGUI.DEFAULT_NEW_DELAY_SECONDS
-                                + " giây) vào whitelist.",
-                        NamedTextColor.GREEN));
+                player.sendMessage(MessageUtil.withPrefix(
+                        Component.text("✔ ", NamedTextColor.GREEN)
+                                .append(Component.text("Đã thêm " + material.name() + " ("
+                                                + BlockWhitelistGUI.DEFAULT_NEW_DELAY_SECONDS + " giây) vào whitelist.",
+                                        NamedTextColor.GREEN))));
             } else {
                 int newDelay = currentDelay + BlockWhitelistGUI.STEP_SECONDS;
                 setBlockDelay(material, newDelay);
-                player.sendMessage(Component.text(
-                        material.name() + ": " + newDelay + " giây.", NamedTextColor.GREEN));
+                player.sendMessage(MessageUtil.withPrefix(
+                        Component.text("✔ ", NamedTextColor.GREEN)
+                                .append(Component.text(material.name() + ": " + newDelay + " giây.",
+                                        NamedTextColor.GREEN))));
             }
             reopen(player, gui.getPage());
             return;
@@ -155,16 +160,19 @@ public final class WhitelistGUIListener implements Listener {
 
         if (event.isRightClick()) {
             if (!isWhitelisted) {
-                player.sendMessage(Component.text(
-                        material.name() + " chưa có trong whitelist. Click trái vào item để thêm trước.",
-                        NamedTextColor.YELLOW));
+                player.sendMessage(MessageUtil.withPrefix(
+                        Component.text("⚠ ", NamedTextColor.YELLOW)
+                                .append(Component.text(material.name() + " chưa có trong whitelist. Click trái vào item để thêm trước.",
+                                        NamedTextColor.YELLOW))));
                 return;
             }
             int newDelay = Math.max(BlockWhitelistGUI.MIN_DELAY_SECONDS,
                     currentDelay - BlockWhitelistGUI.STEP_SECONDS);
             setBlockDelay(material, newDelay);
-            player.sendMessage(Component.text(
-                    material.name() + ": " + newDelay + " giây.", NamedTextColor.GREEN));
+            player.sendMessage(MessageUtil.withPrefix(
+                    Component.text("✔ ", NamedTextColor.GREEN)
+                            .append(Component.text(material.name() + ": " + newDelay + " giây.",
+                                    NamedTextColor.GREEN))));
             reopen(player, gui.getPage());
         }
     }
@@ -175,9 +183,10 @@ public final class WhitelistGUIListener implements Listener {
         plugin.saveConfig();
         plugin.reloadPluginConfig();
 
-        player.sendMessage(Component.text(
-                "Tất cả block: " + (newState ? "đã BẬT." : "đã TẮT."),
-                newState ? NamedTextColor.GREEN : NamedTextColor.GRAY));
+        player.sendMessage(MessageUtil.withPrefix(
+                Component.text(newState ? "✔ " : "✕ ", newState ? NamedTextColor.GREEN : NamedTextColor.GRAY)
+                        .append(Component.text("Tất cả block: " + (newState ? "đã BẬT." : "đã TẮT."),
+                                newState ? NamedTextColor.GREEN : NamedTextColor.GRAY))));
 
         reopen(player, gui.getPage());
     }
@@ -187,23 +196,28 @@ public final class WhitelistGUIListener implements Listener {
         Material material = hand.getType();
 
         if (material.isAir() || !material.isBlock()) {
-            player.sendMessage(Component.text(
-                    "Bạn cần cầm một block trên tay để thêm vào danh sách.", NamedTextColor.RED));
+            player.sendMessage(MessageUtil.withPrefix(
+                    Component.text("⚠ ", NamedTextColor.RED)
+                            .append(Component.text("Bạn cần cầm một block trên tay để thêm vào danh sách.",
+                                    NamedTextColor.RED))));
             return;
         }
 
         if (plugin.getPluginConfig().getBlockDelay(material).isPresent()) {
-            player.sendMessage(Component.text(
-                    material.name() + " đã có trong danh sách whitelist.", NamedTextColor.YELLOW));
+            player.sendMessage(MessageUtil.withPrefix(
+                    Component.text("⚠ ", NamedTextColor.YELLOW)
+                            .append(Component.text(material.name() + " đã có trong danh sách whitelist.",
+                                    NamedTextColor.YELLOW))));
             return;
         }
 
         setBlockDelay(material, BlockWhitelistGUI.DEFAULT_NEW_DELAY_SECONDS);
 
-        player.sendMessage(Component.text(
-                "Đã thêm " + material.name() + " (" + BlockWhitelistGUI.DEFAULT_NEW_DELAY_SECONDS
-                        + " giây) vào whitelist.",
-                NamedTextColor.GREEN));
+        player.sendMessage(MessageUtil.withPrefix(
+                Component.text("✔ ", NamedTextColor.GREEN)
+                        .append(Component.text("Đã thêm " + material.name() + " ("
+                                        + BlockWhitelistGUI.DEFAULT_NEW_DELAY_SECONDS + " giây) vào whitelist.",
+                                NamedTextColor.GREEN))));
 
         reopen(player, gui.getPage());
     }
@@ -218,8 +232,10 @@ public final class WhitelistGUIListener implements Listener {
 
         if (click == ClickType.SHIFT_LEFT || click == ClickType.SHIFT_RIGHT) {
             removeBlockDelay(material);
-            player.sendMessage(Component.text(
-                    "Đã xóa " + material.name() + " khỏi whitelist.", NamedTextColor.RED));
+            player.sendMessage(MessageUtil.withPrefix(
+                    Component.text("✔ ", NamedTextColor.RED)
+                            .append(Component.text("Đã xóa " + material.name() + " khỏi whitelist.",
+                                    NamedTextColor.RED))));
             reopen(player, gui.getPage());
             return;
         }
@@ -285,9 +301,11 @@ public final class WhitelistGUIListener implements Listener {
         plugin.saveConfig();
         plugin.reloadPluginConfig();
 
-        player.sendMessage(Component.text(
-                "World \"" + worldName + "\": " + (wasEnabled ? "đã TẮT." : "đã BẬT."),
-                wasEnabled ? NamedTextColor.GRAY : NamedTextColor.GREEN));
+        boolean nowEnabled = !wasEnabled;
+        player.sendMessage(MessageUtil.withPrefix(
+                Component.text(nowEnabled ? "✔ " : "✕ ", nowEnabled ? NamedTextColor.GREEN : NamedTextColor.GRAY)
+                        .append(Component.text("World \"" + worldName + "\": " + (wasEnabled ? "đã TẮT." : "đã BẬT."),
+                                nowEnabled ? NamedTextColor.GREEN : NamedTextColor.GRAY))));
 
         reopenWorld(player);
     }
@@ -330,8 +348,10 @@ public final class WhitelistGUIListener implements Listener {
         if (material == null) return;
 
         removeFromBlacklist(material);
-        player.sendMessage(Component.text(
-                "Đã xóa " + material.name() + " khỏi blacklist.", NamedTextColor.RED));
+        player.sendMessage(MessageUtil.withPrefix(
+                Component.text("✔ ", NamedTextColor.RED)
+                        .append(Component.text("Đã xóa " + material.name() + " khỏi blacklist.",
+                                NamedTextColor.RED))));
         reopenBlacklist(player, gui.getPage());
     }
 
@@ -341,9 +361,10 @@ public final class WhitelistGUIListener implements Listener {
 
         Material material = clickedItem.getType();
         if (!material.isBlock()) {
-            player.sendMessage(Component.text(
-                    material.name() + " không phải là block, không thể thêm vào blacklist.",
-                    NamedTextColor.RED));
+            player.sendMessage(MessageUtil.withPrefix(
+                    Component.text("⚠ ", NamedTextColor.RED)
+                            .append(Component.text(material.name() + " không phải là block, không thể thêm vào blacklist.",
+                                    NamedTextColor.RED))));
             return;
         }
 
@@ -351,26 +372,34 @@ public final class WhitelistGUIListener implements Listener {
 
         if (event.isLeftClick()) {
             if (isBlacklisted) {
-                player.sendMessage(Component.text(
-                        material.name() + " đã có trong blacklist rồi.", NamedTextColor.YELLOW));
+                player.sendMessage(MessageUtil.withPrefix(
+                        Component.text("⚠ ", NamedTextColor.YELLOW)
+                                .append(Component.text(material.name() + " đã có trong blacklist rồi.",
+                                        NamedTextColor.YELLOW))));
                 return;
             }
             addToBlacklist(material);
-            player.sendMessage(Component.text(
-                    "Đã thêm " + material.name() + " vào blacklist.", NamedTextColor.GREEN));
+            player.sendMessage(MessageUtil.withPrefix(
+                    Component.text("✔ ", NamedTextColor.GREEN)
+                            .append(Component.text("Đã thêm " + material.name() + " vào blacklist.",
+                                    NamedTextColor.GREEN))));
             reopenBlacklist(player, gui.getPage());
             return;
         }
 
         if (event.isRightClick()) {
             if (!isBlacklisted) {
-                player.sendMessage(Component.text(
-                        material.name() + " chưa có trong blacklist.", NamedTextColor.YELLOW));
+                player.sendMessage(MessageUtil.withPrefix(
+                        Component.text("⚠ ", NamedTextColor.YELLOW)
+                                .append(Component.text(material.name() + " chưa có trong blacklist.",
+                                        NamedTextColor.YELLOW))));
                 return;
             }
             removeFromBlacklist(material);
-            player.sendMessage(Component.text(
-                    "Đã xóa " + material.name() + " khỏi blacklist.", NamedTextColor.RED));
+            player.sendMessage(MessageUtil.withPrefix(
+                    Component.text("✔ ", NamedTextColor.RED)
+                            .append(Component.text("Đã xóa " + material.name() + " khỏi blacklist.",
+                                    NamedTextColor.RED))));
             reopenBlacklist(player, gui.getPage());
         }
     }
@@ -380,21 +409,27 @@ public final class WhitelistGUIListener implements Listener {
         Material material = hand.getType();
 
         if (material.isAir() || !material.isBlock()) {
-            player.sendMessage(Component.text(
-                    "Bạn cần cầm một block trên tay để thêm vào blacklist.", NamedTextColor.RED));
+            player.sendMessage(MessageUtil.withPrefix(
+                    Component.text("⚠ ", NamedTextColor.RED)
+                            .append(Component.text("Bạn cần cầm một block trên tay để thêm vào blacklist.",
+                                    NamedTextColor.RED))));
             return;
         }
 
         if (plugin.getPluginConfig().isBlacklisted(material)) {
-            player.sendMessage(Component.text(
-                    material.name() + " đã có trong blacklist.", NamedTextColor.YELLOW));
+            player.sendMessage(MessageUtil.withPrefix(
+                    Component.text("⚠ ", NamedTextColor.YELLOW)
+                            .append(Component.text(material.name() + " đã có trong blacklist.",
+                                    NamedTextColor.YELLOW))));
             return;
         }
 
         addToBlacklist(material);
 
-        player.sendMessage(Component.text(
-                "Đã thêm " + material.name() + " vào blacklist.", NamedTextColor.GREEN));
+        player.sendMessage(MessageUtil.withPrefix(
+                Component.text("✔ ", NamedTextColor.GREEN)
+                        .append(Component.text("Đã thêm " + material.name() + " vào blacklist.",
+                                NamedTextColor.GREEN))));
 
         reopenBlacklist(player, gui.getPage());
     }

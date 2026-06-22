@@ -9,6 +9,10 @@ import me.ihqqq.listener.EntityPlaceListener;
 import me.ihqqq.listener.PlayerInteractListener;
 import me.ihqqq.listener.WhitelistGUIListener;
 import me.ihqqq.manager.RemovalManager;
+import me.ihqqq.util.MessageUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collections;
@@ -18,6 +22,8 @@ import java.util.Set;
 import java.util.logging.Level;
 
 public final class notTempBlock extends JavaPlugin {
+
+    public static notTempBlock plugin;
 
     private PluginConfig pluginConfig;
     private RemovalManager removalManager;
@@ -43,6 +49,8 @@ public final class notTempBlock extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        plugin = this;
+
         reloadPluginConfig();
 
         this.removalManager = new RemovalManager(this);
@@ -51,15 +59,15 @@ public final class notTempBlock extends JavaPlugin {
         registerListeners();
         registerCommands();
 
-        getLogger().info("notTempBlock v" + getDescription().getVersion() + " enabled.");
+        printEnableBanner();
     }
 
     @Override
     public void onDisable() {
+        printDisableBanner();
         if (removalManager != null) {
             removalManager.cancelAll();
         }
-        getLogger().info("notTempBlock disabled – all pending tasks cancelled.");
     }
 
     public void reloadPluginConfig() {
@@ -103,6 +111,96 @@ public final class notTempBlock extends JavaPlugin {
             cmd.setExecutor(handler);
             cmd.setTabCompleter(handler);
         }
+    }
+
+    private void printEnableBanner() {
+        String ver     = getDescription().getVersion();
+        String authors = String.join(", ", getDescription().getAuthors());
+
+        boolean wgEnabledInConfig = pluginConfig.isWorldGuardHookEnabled();
+        boolean wgHooked          = worldGuardHook != null;
+
+        Component wgStatus = !wgEnabledInConfig
+                ? Component.text("Tắt", NamedTextColor.RED)
+                : (wgHooked
+                   ? Component.text("Hoạt động", NamedTextColor.GREEN)
+                   : Component.text("Bật ", NamedTextColor.YELLOW)
+                .append(Component.text("(WorldGuard chưa cài)", NamedTextColor.DARK_GRAY)));
+
+        Component allBlocksStatus = pluginConfig.isAllBlocksEnabled()
+                ? Component.text("BẬT", NamedTextColor.GREEN)
+                : Component.text("TẮT", NamedTextColor.GRAY);
+
+        Component bypassStatus = pluginConfig.isBypassPermissionEnabled()
+                ? Component.text("BẬT", NamedTextColor.GREEN)
+                : Component.text("TẮT", NamedTextColor.GRAY);
+
+        Component sep = separator();
+
+        MessageUtil.log(sep);
+        MessageUtil.log(Component.empty());
+        MessageUtil.log(Component.text()
+                .append(Component.text("    ", NamedTextColor.WHITE))
+                .append(MessageUtil.pluginTitle().decoration(TextDecoration.BOLD, true))
+                .append(Component.text("  ", NamedTextColor.GRAY))
+                .append(Component.text("»", NamedTextColor.DARK_GRAY))
+                .append(Component.text(" v" + ver, NamedTextColor.GRAY))
+                .build());
+        MessageUtil.log(Component.text()
+                .append(Component.text("    ", NamedTextColor.WHITE))
+                .append(Component.text("Tác giả", NamedTextColor.GRAY))
+                .append(Component.text(": ", NamedTextColor.DARK_GRAY))
+                .append(Component.text(authors, NamedTextColor.GREEN))
+                .build());
+        MessageUtil.log(Component.empty());
+        MessageUtil.log(sep);
+        MessageUtil.log(Component.empty());
+        MessageUtil.log(statusLine("WorldGuard", wgStatus));
+        MessageUtil.log(statusLine("Bypass permission", bypassStatus));
+        MessageUtil.log(statusLine("Tất cả block tạm thời", allBlocksStatus));
+        MessageUtil.log(statusLine("Block đã cấu hình", Component.text(
+                String.valueOf(pluginConfig.getBlockDelays().size()), NamedTextColor.AQUA)));
+        MessageUtil.log(statusLine("Entity đã cấu hình", Component.text(
+                String.valueOf(pluginConfig.getEntityDelays().size()), NamedTextColor.AQUA)));
+        MessageUtil.log(statusLine("Blacklist", Component.text(
+                String.valueOf(pluginConfig.getBlacklistBlocks().size()) + " block", NamedTextColor.AQUA)));
+        MessageUtil.log(Component.empty());
+        MessageUtil.log(sep);
+        MessageUtil.log(Component.text()
+                .append(Component.text("  ✔ ", NamedTextColor.GREEN))
+                .append(Component.text("NotTempBlock đã khởi động thành công!", NamedTextColor.GREEN))
+                .build());
+        MessageUtil.log(sep);
+    }
+
+    private void printDisableBanner() {
+        Component sep = separator();
+
+        MessageUtil.log(sep);
+        MessageUtil.log(Component.text()
+                .append(Component.text("  ✘ ", NamedTextColor.RED))
+                .append(Component.text("NotTempBlock đang tắt...", NamedTextColor.RED))
+                .build());
+        MessageUtil.log(Component.text("  Đang hủy các tác vụ xóa đang chờ...", NamedTextColor.GRAY));
+        MessageUtil.log(Component.text()
+                .append(Component.text("  Plugin thuộc sở hữu của ", NamedTextColor.DARK_GRAY))
+                .append(Component.text("NotMC", NamedTextColor.YELLOW))
+                .append(Component.text(" — Leak là con chó ghẻ!", NamedTextColor.DARK_GRAY))
+                .build());
+        MessageUtil.log(sep);
+    }
+
+    private static Component statusLine(String label, Component status) {
+        return Component.text()
+                .append(Component.text("  » ", NamedTextColor.DARK_GRAY))
+                .append(Component.text(label, NamedTextColor.GRAY))
+                .append(Component.text(": ", NamedTextColor.DARK_GRAY))
+                .append(status)
+                .build();
+    }
+
+    private static Component separator() {
+        return Component.text("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", NamedTextColor.DARK_GRAY);
     }
 
     public PluginConfig getPluginConfig() {

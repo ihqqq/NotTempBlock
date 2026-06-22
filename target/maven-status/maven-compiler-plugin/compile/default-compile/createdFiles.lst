@@ -9,6 +9,7 @@ me\ihqqq\gui\BlacklistGUI.class
 me\ihqqq\gui\WorldWhitelistGUI.class
 me\ihqqq\gui\GuiItems.class
 me\ihqqq\command\NotTempBlockCommand.class
+me\ihqqq\util\MessageUtil.class
 me\ihqqq\listener\BlockPlaceListener.class
 me\ihqqq\listener\EntityPlaceListener.class
 me\ihqqq\notTempBlock.class

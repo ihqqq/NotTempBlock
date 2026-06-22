@@ -48,8 +48,8 @@ public final class BlacklistGUI implements InventoryHolder {
 
     private void build() {
         Component title = Component.text()
-                .append(Component.text(TITLE_PREFIX, NamedTextColor.LIGHT_PURPLE, TextDecoration.BOLD))
-                .append(Component.text("  (Trang " + (page + 1) + ")", NamedTextColor.GRAY))
+                .append(Component.text(TITLE_PREFIX, NamedTextColor.RED, TextDecoration.BOLD))
+                .append(Component.text("   Trang " + (page + 1), NamedTextColor.GRAY))
                 .build();
 
         this.inventory = Bukkit.createInventory(this, SIZE, title);
@@ -65,11 +65,10 @@ public final class BlacklistGUI implements InventoryHolder {
         if (entries.isEmpty()) {
             inventory.setItem(22, GuiItems.named(Material.PAPER, NamedTextColor.GRAY,
                     "Danh sách trống",
-                    List.of("Chưa có block nào trong blacklist.",
-                            "Cầm một block và click \"Thêm block từ tay cầm\" bên dưới.",
-                            "",
-                            "Khi \"Tất cả block\" đang BẬT, đây là nơi",
-                            "khai báo các block sẽ KHÔNG bị xóa.")));
+                    List.of(
+                            "Cầm một block và bấm",
+                            "\"Thêm block\" để loại trừ."
+                    )));
         }
 
         ItemStack filler = GuiItems.filler();
@@ -79,31 +78,21 @@ public final class BlacklistGUI implements InventoryHolder {
 
         if (page > 0) {
             inventory.setItem(SLOT_PREV, GuiItems.named(Material.ARROW, NamedTextColor.YELLOW,
-                    "« Trang trước", List.of()));
+                    "Trang trước", List.of()));
         }
         if (end < entries.size()) {
             inventory.setItem(SLOT_NEXT, GuiItems.named(Material.ARROW, NamedTextColor.YELLOW,
-                    "Trang sau »", List.of()));
+                    "Trang sau", List.of()));
         }
 
         inventory.setItem(SLOT_BACK, GuiItems.named(Material.ARROW, NamedTextColor.YELLOW,
-                "« Quay lại Whitelist", List.of()));
+                "Quay lại Whitelist", List.of()));
 
         inventory.setItem(SLOT_ADD, GuiItems.named(Material.EMERALD, NamedTextColor.GREEN,
-                "+ Thêm block từ tay cầm",
+                "Thêm block từ tay cầm",
                 List.of(
-                        "Cầm một block trên tay rồi",
-                        "click vào đây để thêm vào",
-                        "danh sách blacklist.",
-                        "",
-                        "Block trong danh sách này sẽ",
-                        "KHÔNG BAO GIỜ bị tự động xóa,",
-                        "kể cả khi \"Tất cả block\" đang BẬT.",
-                        "",
-                        "Mẹo: bạn cũng có thể click",
-                        "thẳng vào item trong kho đồ",
-                        "của mình — trái để thêm,",
-                        "phải để xóa."
+                        "Block sẽ không bao giờ",
+                        "bị tự động xóa."
                 )));
 
         inventory.setItem(SLOT_CLOSE, GuiItems.named(Material.BARRIER, NamedTextColor.RED,
@@ -113,20 +102,14 @@ public final class BlacklistGUI implements InventoryHolder {
     private ItemStack buildBlockIcon(Material material) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(Component.text(material.name(), NamedTextColor.LIGHT_PURPLE, TextDecoration.BOLD)
+        meta.displayName(Component.text(material.name(), NamedTextColor.RED, TextDecoration.BOLD)
                 .decoration(TextDecoration.ITALIC, false));
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Trạng thái: ", NamedTextColor.GRAY)
-                .append(Component.text("BLACKLIST", NamedTextColor.LIGHT_PURPLE))
+                .append(Component.text("✔ Bảo vệ", NamedTextColor.RED))
                 .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Block này sẽ KHÔNG BAO GIỜ", NamedTextColor.GRAY)
-                .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("bị tự động xóa, kể cả khi", NamedTextColor.GRAY)
-                .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("\"Tất cả block\" đang BẬT.", NamedTextColor.GRAY)
-                .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Click để xóa khỏi blacklist.", NamedTextColor.RED)
+        lore.add(Component.text("⚠ Click để xóa khỏi blacklist", NamedTextColor.DARK_GRAY)
                 .decoration(TextDecoration.ITALIC, false));
         meta.lore(lore);
 

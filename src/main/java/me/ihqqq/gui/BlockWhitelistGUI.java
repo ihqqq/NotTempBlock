@@ -58,7 +58,7 @@ public final class BlockWhitelistGUI implements InventoryHolder {
     private void build() {
         Component title = Component.text()
                 .append(Component.text(TITLE_PREFIX, NamedTextColor.GOLD, TextDecoration.BOLD))
-                .append(Component.text("  (Trang " + (page + 1) + ")", NamedTextColor.GRAY))
+                .append(Component.text("   Trang " + (page + 1), NamedTextColor.GRAY))
                 .build();
 
         this.inventory = Bukkit.createInventory(this, SIZE, title);
@@ -74,9 +74,11 @@ public final class BlockWhitelistGUI implements InventoryHolder {
 
         if (entries.isEmpty()) {
             inventory.setItem(22, GuiItems.named(Material.PAPER, NamedTextColor.GRAY,
-                    "Danh sách trống",
-                    List.of("Chưa có block nào trong whitelist.",
-                            "Cầm một block và click \"Thêm block từ tay cầm\" bên dưới.")));
+                    "Chưa có block nào",
+                    List.of(
+                            "Cầm một block và bấm",
+                            "\"Thêm block\" để bắt đầu."
+                    )));
         }
 
         ItemStack filler = GuiItems.filler();
@@ -86,64 +88,37 @@ public final class BlockWhitelistGUI implements InventoryHolder {
 
         if (page > 0) {
             inventory.setItem(SLOT_PREV, GuiItems.named(Material.ARROW, NamedTextColor.YELLOW,
-                    "« Trang trước", List.of()));
+                    "Trang trước", List.of()));
         }
         if (end < entries.size()) {
             inventory.setItem(SLOT_NEXT, GuiItems.named(Material.ARROW, NamedTextColor.YELLOW,
-                    "Trang sau »", List.of()));
+                    "Trang sau", List.of()));
         }
 
         inventory.setItem(SLOT_WORLDS, GuiItems.named(Material.COMPASS, NamedTextColor.AQUA,
                 "Quản lý World",
-                List.of(
-                        "Xem và bật/tắt nhanh các",
-                        "world áp dụng tính năng",
-                        "tự động xóa block/entity.",
-                        "Click để mở."
-                )));
+                List.of("Bật/tắt tính năng theo từng world.")));
 
         boolean allBlocksEnabled = plugin.getPluginConfig().isAllBlocksEnabled();
         inventory.setItem(SLOT_TOGGLE_ALL, GuiItems.named(
                 allBlocksEnabled ? Material.LIME_DYE : Material.GRAY_DYE,
                 allBlocksEnabled ? NamedTextColor.GREEN : NamedTextColor.GRAY,
-                "Tất cả block: " + (allBlocksEnabled ? "BẬT" : "TẮT"),
+                (allBlocksEnabled ? "✔ " : "✕ ") + "Tất cả block: " + (allBlocksEnabled ? "BẬT" : "TẮT"),
                 List.of(
-                        "Khi BẬT, MỌI block được đặt",
-                        "sẽ là tạm thời theo thời gian",
-                        "mặc định — TRỪ các block đã",
-                        "có trong danh sách dưới đây",
-                        "(chúng vẫn dùng thời gian riêng)",
-                        "và các block trong Blacklist.",
-                        "Click để chuyển đổi."
+                        "Áp dụng cho mọi block đặt mới,",
+                        "trừ block trong Whitelist & Blacklist."
                 )));
 
         int blacklistCount = plugin.getPluginConfig().getBlacklistBlocks().size();
-        inventory.setItem(SLOT_BLACKLIST, GuiItems.named(Material.BOOK, NamedTextColor.LIGHT_PURPLE,
-                "Quản lý Blacklist (" + blacklistCount + ")",
-                List.of(
-                        "Danh sách các block sẽ",
-                        "KHÔNG BAO GIỜ bị tự động",
-                        "xóa, kể cả khi \"Tất cả",
-                        "block\" đang BẬT.",
-                        "",
-                        "Hữu ích khi bạn muốn bật",
-                        "chế độ blacklist (xóa hết",
-                        "trừ vài block ngoại lệ).",
-                        "Click để mở."
-                )));
+        inventory.setItem(SLOT_BLACKLIST, GuiItems.named(Material.BOOK, NamedTextColor.RED,
+                "Blacklist (" + blacklistCount + ")",
+                List.of("Block không bao giờ bị tự xóa.")));
 
         inventory.setItem(SLOT_ADD, GuiItems.named(Material.EMERALD, NamedTextColor.GREEN,
-                "+ Thêm block từ tay cầm",
+                "Thêm block từ tay cầm",
                 List.of(
-                        "Cầm một block trên tay rồi",
-                        "click vào đây để thêm vào",
-                        "danh sách whitelist (mặc định "
-                                + DEFAULT_NEW_DELAY_SECONDS + "s).",
-                        "",
-                        "Mẹo: bạn cũng có thể click",
-                        "thẳng vào item trong kho đồ",
-                        "của mình — trái để thêm/+5s,",
-                        "phải để -5s."
+                        "Mặc định " + DEFAULT_NEW_DELAY_SECONDS + "s.",
+                        "Trái/Phải để +/-5s khi đã có."
                 )));
 
         inventory.setItem(SLOT_CLOSE, GuiItems.named(Material.BARRIER, NamedTextColor.RED,
@@ -157,14 +132,12 @@ public final class BlockWhitelistGUI implements InventoryHolder {
                 .decoration(TextDecoration.ITALIC, false));
 
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("Thời gian xóa: ", NamedTextColor.GRAY)
-                .append(Component.text(delaySeconds + " giây", NamedTextColor.WHITE))
+        lore.add(Component.text("Xóa sau: ", NamedTextColor.GRAY)
+                .append(Component.text(delaySeconds + "s", NamedTextColor.WHITE))
                 .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Trái chuột: +" + STEP_SECONDS + "s", NamedTextColor.GREEN)
+        lore.add(Component.text("Trái +5s   Phải -5s", NamedTextColor.DARK_GRAY)
                 .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Phải chuột: -" + STEP_SECONDS + "s", NamedTextColor.RED)
-                .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Shift + Trái chuột: Xóa khỏi danh sách", NamedTextColor.DARK_RED)
+        lore.add(Component.text("⚠ Shift: xóa khỏi danh sách", NamedTextColor.RED)
                 .decoration(TextDecoration.ITALIC, false));
         meta.lore(lore);
 

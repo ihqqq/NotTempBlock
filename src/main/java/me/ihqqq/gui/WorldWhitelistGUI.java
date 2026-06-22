@@ -37,7 +37,7 @@ public final class WorldWhitelistGUI implements InventoryHolder {
     }
 
     private void build() {
-        Component title = Component.text("Quản lý World", NamedTextColor.GOLD, TextDecoration.BOLD);
+        Component title = Component.text("Quản lý World", NamedTextColor.AQUA, TextDecoration.BOLD);
         this.inventory = Bukkit.createInventory(this, SIZE, title);
 
         int shown = Math.min(worlds.size(), MAX_WORLDS_SHOWN);
@@ -53,7 +53,7 @@ public final class WorldWhitelistGUI implements InventoryHolder {
         }
 
         inventory.setItem(SLOT_BACK, GuiItems.named(Material.ARROW, NamedTextColor.YELLOW,
-                "« Quay lại Block", List.of()));
+                "Quay lại Block", List.of()));
         inventory.setItem(SLOT_CLOSE, GuiItems.named(Material.BARRIER, NamedTextColor.RED,
                 "Đóng", List.of()));
     }
@@ -73,12 +73,10 @@ public final class WorldWhitelistGUI implements InventoryHolder {
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Trạng thái: ", NamedTextColor.GRAY)
-                .append(Component.text(enabled ? "BẬT" : "TẮT",
+                .append(Component.text(enabled ? "✔ Bật" : "✕ Tắt",
                         enabled ? NamedTextColor.GREEN : NamedTextColor.RED))
                 .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Loại world: " + world.getEnvironment().name(), NamedTextColor.DARK_GRAY)
-                .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Click để chuyển đổi BẬT/TẮT.", NamedTextColor.YELLOW)
+        lore.add(Component.text("Click để chuyển đổi", NamedTextColor.DARK_GRAY)
                 .decoration(TextDecoration.ITALIC, false));
         meta.lore(lore);
 
